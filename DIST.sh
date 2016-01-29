@@ -6,7 +6,6 @@
 #   2016-01-09
 #
 
-exit 0
 PACKAGE=iotdb-format
 DIST_ROOT=/var/tmp/.dist.$$
 
@@ -28,13 +27,13 @@ echo "=================="
     fi
     mkdir "${NPM_DST}" || exit 1
 
-    update-package --increment-version --package "$PACKAGE" --iotdb || exit 1
+    update-package --increment-version --package "$PACKAGE" || exit 1
 
     tar cf - \
         --exclude "node_modules" \
         README.md LICENSE \
-        iotdb.json package.json \
-        index.js \
+        package.json \
+        index.js format.js \
         |
     ( cd "${NPM_DST}" && tar xvf - && npm publish ) || exit 1
     git commit -m "new release" package.json || exit 1

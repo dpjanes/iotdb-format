@@ -73,7 +73,7 @@ var format = function(template, d, fd) {
 
         var inners = [];
         if (match[3]) {
-            inners = JSON.parse("[" + match[3] + "]");
+            inners = JSON.parse("[" + match[3].replace(/'/g, '"') + "]");
         }
 
         inners.splice(0, 0, value);
