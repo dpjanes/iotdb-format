@@ -29,6 +29,9 @@ var logger = iotdb.logger({
     module: "format",
 });
 
+/**
+ *  LOTS OF WORK NEEDED FOR NON-STRINGS: REFERENCE DJANGO
+ */
 var format = function(template, d, fd) {
     d = _.d.compose.shallow(d, {
     });
@@ -60,7 +63,12 @@ var format = function(template, d, fd) {
     };
 
     var _pipe = function(value, expression) {
-        var match = expression.match(/^([-A-Za-z0-9_]+)([(]([^]*)[)])?/);
+        var match = expression.match(/^:(.*)$/);
+        if (match) {
+            return fd["default"](value, match[1]);
+        }
+
+        match = expression.match(/^([-A-Za-z0-9_]+)([(]([^]*)[)])?/);
         if (!match) {
             throw new Error("bad pipe expression: " + expression);
         }
