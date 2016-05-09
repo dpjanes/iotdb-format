@@ -1,4 +1,4 @@
-var format = require('./format').format;
+var format = require('../format').format;
 
 var d = {
     phrase: "Replacement String",

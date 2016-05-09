@@ -22,9 +22,9 @@
 
 "use strict";
 
-var iotdb = require('iotdb');
-var _ = iotdb._;
-var logger = iotdb.logger({
+const iotdb = require('iotdb');
+const _ = iotdb._;
+const logger = iotdb.logger({
     name: "iotdb-commands",
     module: "format",
 });
@@ -32,7 +32,7 @@ var logger = iotdb.logger({
 /**
  *  LOTS OF WORK NEEDED FOR NON-STRINGS: REFERENCE DJANGO
  */
-var format = function(template, d, fd) {
+const _format_string = function(template, d, fd) {
     d = _.d.compose.shallow(d, {
     });
     fd = _.d.compose.shallow(fd, {
@@ -50,7 +50,7 @@ var format = function(template, d, fd) {
         },
     });
 
-    var _normalize = function(s, is_final) {
+    const _normalize = function(s, is_final) {
         if (s === undefined) {
             return "";
         } else if (s === null) {
@@ -62,7 +62,7 @@ var format = function(template, d, fd) {
         }
     };
 
-    var _pipe = function(value, expression) {
+    const _pipe = function(value, expression) {
         var match = expression.match(/^:(.*)$/);
         if (match) {
             return fd["default"](value, match[1]);
@@ -73,8 +73,8 @@ var format = function(template, d, fd) {
             throw new Error("bad pipe expression: " + expression);
         }
 
-        var fname = match[1];
-        var f = fd[fname];
+        const fname = match[1];
+        const f = _.d.get(fd, fname);
         if (!f) {
             throw new Error("bad pipe function - not found: " + fname);
         }
@@ -89,12 +89,11 @@ var format = function(template, d, fd) {
         return _normalize(f.apply(f, inners));
     };
 
-    var _expression_replacer = function(match, variable) {
-        var inner = variable.replace(/^\s+/, '').replace(/\s+$/, '');
-        var parts = inner.split(/[|]/g);
-
-        var variable = parts[0];
-        var value = _normalize(d[variable]);
+    const _expression_replacer = function(match, variable) {
+        const inner = variable.replace(/^\s+/, '').replace(/\s+$/, '');
+        const parts = inner.split(/[|]/g);
+        variable = parts[0];
+        var value = _normalize(_.d.get(d, variable));
 
         parts.splice(0, 1);
 
@@ -107,6 +106,30 @@ var format = function(template, d, fd) {
     };
 
     return template.replace(/{{(.*?)}}/g, _expression_replacer);
+};
+
+/**
+ *  This is similar to format, except it will walk the object
+ *  looking for strings to replace
+ */
+const _format_object = function(template_object, d, fd) {
+    return _.d.transform(template_object, {
+        value: function(value, paramd) {
+            if (!_.is.String(value)) {
+                return value
+            }
+
+            return format(value, d, fd);
+        },
+    });
+};
+
+const format = function(template, d, fd) {
+    if (_.is.String(template)) {
+        return _format_string(template, d, fd);
+    } else {
+        return _format_object(template, d, fd);
+    }
 };
 
 /**
