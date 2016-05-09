@@ -22,8 +22,7 @@
 
 "use strict";
 
-var format = require('./format').format;
-
+const format = require('./format').format;
 
 /**
  *  API

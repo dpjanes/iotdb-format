@@ -24,33 +24,35 @@
 
 const iotdb = require('iotdb');
 const _ = iotdb._;
+
 const logger = iotdb.logger({
-    name: "iotdb-commands",
+    name: "iotdb-format",
     module: "format",
 });
+
+var format;
 
 /**
  *  LOTS OF WORK NEEDED FOR NON-STRINGS: REFERENCE DJANGO
  */
-const _format_string = function(template, d, fd) {
-    d = _.d.compose.shallow(d, {
-    });
+const _format_string = function (template, d, fd) {
+    d = _.d.compose.shallow(d, {});
     fd = _.d.compose.shallow(fd, {
-        upper: function(s) {
+        upper: function (s) {
             return s.toUpperCase();
         },
-        lower: function(s) {
+        lower: function (s) {
             return s.toLowerCase();
         },
-        binary: function(s, for_false, for_true) {
+        binary: function (s, for_false, for_true) {
             return _.is.Empty(s) ? for_false : for_true;
         },
-        'default': function(s, otherwise) {
+        'default': function (s, otherwise) {
             return (s.length === 0) ? otherwise : s;
         },
     });
 
-    const _normalize = function(s, is_final) {
+    const _normalize = function (s, is_final) {
         if (s === undefined) {
             return "";
         } else if (s === null) {
@@ -58,11 +60,11 @@ const _format_string = function(template, d, fd) {
         } else if (is_final && !_.is.String(s)) {
             return "" + s;
         } else {
-            return s
+            return s;
         }
     };
 
-    const _pipe = function(value, expression) {
+    const _pipe = function (value, expression) {
         var match = expression.match(/^:(.*)$/);
         if (match) {
             return fd["default"](value, match[1]);
@@ -89,7 +91,7 @@ const _format_string = function(template, d, fd) {
         return _normalize(f.apply(f, inners));
     };
 
-    const _expression_replacer = function(match, variable) {
+    const _expression_replacer = function (match, variable) {
         const inner = variable.replace(/^\s+/, '').replace(/\s+$/, '');
         const parts = inner.split(/[|]/g);
         variable = parts[0];
@@ -97,7 +99,7 @@ const _format_string = function(template, d, fd) {
 
         parts.splice(0, 1);
 
-        parts.map(function(part) {
+        parts.map(function (part) {
             value = _pipe(value, part);
         });
 
@@ -112,11 +114,11 @@ const _format_string = function(template, d, fd) {
  *  This is similar to format, except it will walk the object
  *  looking for strings to replace
  */
-const _format_object = function(template_object, d, fd) {
+const _format_object = function (template_object, d, fd) {
     return _.d.transform(template_object, {
-        value: function(value, paramd) {
+        value: function (value, paramd) {
             if (!_.is.String(value)) {
-                return value
+                return value;
             }
 
             return format(value, d, fd);
@@ -124,7 +126,7 @@ const _format_object = function(template_object, d, fd) {
     });
 };
 
-const format = function(template, d, fd) {
+var format = function (template, d, fd) {
     if (_.is.String(template)) {
         return _format_string(template, d, fd);
     } else {
