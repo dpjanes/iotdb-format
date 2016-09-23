@@ -38,18 +38,10 @@ var format;
 const _format_string = function (template, d, fd) {
     d = _.d.compose.shallow(d, {});
     fd = _.d.compose.shallow(fd, {
-        upper: function (s) {
-            return s.toUpperCase();
-        },
-        lower: function (s) {
-            return s.toLowerCase();
-        },
-        binary: function (s, for_false, for_true) {
-            return _.is.Empty(s) ? for_false : for_true;
-        },
-        'default': function (s, otherwise) {
-            return (s.length === 0) ? otherwise : s;
-        },
+        upper: s => s.toUpperCase(),
+        lower: s => s.toLowerCase(),
+        binary: (s, for_false, for_true) => _.coerce.to.Boolean(s, false) ? for_true : for_false,
+        'default': (s, otherwise) => (s.length === 0) ? otherwise : s,
     });
 
     const _normalize = function (s, is_final) {
