@@ -22,10 +22,9 @@
 
 "use strict";
 
-const iotdb = require('iotdb');
-const _ = iotdb._;
+const _ = require('iotdb-helpers');
 
-const logger = iotdb.logger({
+const logger = _.logger.make({
     name: "iotdb-format",
     module: "format",
 });
