@@ -29,12 +29,14 @@ const logger = _.logger.make({
     module: "format",
 });
 
-var format;
-
 /**
  *  LOTS OF WORK NEEDED FOR NON-STRINGS: REFERENCE DJANGO
  */
-const _format_string = function (template, d, fd) {
+const _format_string = function (template, d, fd, dotpath) {
+    if (dotpath) {
+        template = template.replace(/[.]/g, "/")
+    }
+
     d = _.d.compose.shallow(d, {});
     fd = _.d.compose.shallow(fd, {
         upper: s => s.toUpperCase(),
@@ -105,19 +107,19 @@ const _format_string = function (template, d, fd) {
  *  This is similar to format, except it will walk the object
  *  looking for strings to replace
  */
-const _format_object = function (template_object, d, fd) {
+const _format_object = function (template_object, d, fd, dotpath) {
     return _.d.transform(template_object, {
         value: function (value, paramd) {
             if (!_.is.String(value)) {
                 return value;
             }
 
-            return format(value, d, fd);
+            return format(value, d, fd, dotpath);
         },
     });
 };
 
-var format = function (template, d, fd) {
+const format = function (template, d, fd) {
     if (_.is.String(template)) {
         return _format_string(template, d, fd);
     } else {
@@ -125,7 +127,16 @@ var format = function (template, d, fd) {
     }
 };
 
+const format_dotpath = function (template, d, fd) {
+    if (_.is.String(template)) {
+        return _format_string(template, d, fd, true);
+    } else {
+        return _format_object(template, d, fd, true);
+    }
+};
+
 /**
  *  API
  */
 exports.format = format;
+exports.format.dotpath = format_dotpath;
