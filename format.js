@@ -43,6 +43,7 @@ const _format_string = function (template, d, fd, dotpath) {
         lower: s => s.toLowerCase(),
         binary: (s, for_false, for_true) => _.coerce.to.Boolean(s, false) ? for_true : for_false,
         'default': (s, otherwise) => (s.length === 0) ? otherwise : s,
+        json: (s, indent) => JSON.stringify(s, null, indent || 0),
     });
 
     const _normalize = function (s, is_final) {
