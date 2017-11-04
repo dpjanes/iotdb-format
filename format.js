@@ -115,16 +115,16 @@ const _format_object = function (template_object, d, fd, dotpath) {
                 return value;
             }
 
-            return format(value, d, fd, dotpath);
+            return _format_string(value, d, fd, dotpath);
         },
     });
 };
 
 const format = function (template, d, fd) {
     if (_.is.String(template)) {
-        return _format_string(template, d, fd);
+        return _format_string(template, d, fd, false);
     } else {
-        return _format_object(template, d, fd);
+        return _format_object(template, d, fd, false);
     }
 };
 
