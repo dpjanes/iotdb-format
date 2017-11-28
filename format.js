@@ -3,9 +3,9 @@
  *
  *  David Janes
  *  IOTDB.org
- *  206-01-09
+ *  2016-01-09
  *
- *  Copyright [2013-2016] [David P. Janes]
+ *  Copyright [2013-2018] [David P. Janes]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,10 +33,6 @@ const logger = _.logger.make({
  *  LOTS OF WORK NEEDED FOR NON-STRINGS: REFERENCE DJANGO
  */
 const _format_string = function (template, d, fd, dotpath) {
-    if (dotpath) {
-        template = template.replace(/[.]/g, "/")
-    }
-
     d = _.d.compose.shallow(d, {});
     fd = _.d.compose.shallow(fd, {
         upper: s => s.toUpperCase(),
@@ -88,7 +84,12 @@ const _format_string = function (template, d, fd, dotpath) {
     const _expression_replacer = function (match, variable) {
         const inner = variable.replace(/^\s+/, '').replace(/\s+$/, '');
         const parts = inner.split(/[|]/g);
+
         variable = parts[0];
+        if (dotpath) {
+            variable = variable.replace(/[.]/g, "/")
+        }
+
         var value = _normalize(_.d.get(d, variable));
 
         parts.splice(0, 1);

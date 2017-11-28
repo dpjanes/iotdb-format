@@ -5,7 +5,7 @@
  *  IOTDB.org
  *  2016-01-09
  *
- *  Copyright [2013-2015] [David P. Janes]
+ *  Copyright [2013-2018] [David P. Janes]
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,9 +22,7 @@
 
 "use strict";
 
-const format = require('./format').format;
-
 /**
  *  API
  */
-exports.format = format;
+exports.format = require('./format').format;
