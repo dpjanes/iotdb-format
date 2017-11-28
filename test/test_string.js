@@ -59,9 +59,15 @@ describe("format string", function() {
 
         assert.deepEqual(expected, result);
     })
-    it("replaces-with-path(upper)", function() {
+    it("replaces-with-slashpath(upper)", function() {
         const result = format.format("be.fo/re {{ something/a|upper) }} a.ft/er", d);
         const expected = "be.fo/re SOME VALUE a.ft/er";
+
+        assert.deepEqual(expected, result);
+    })
+    it("replaces-with-dotpath(upper)", function() {
+        const result = format.format("be.fo/re {{ something.a|upper) }} a.ft/er", d);
+        const expected = "be.fo/re  a.ft/er";
 
         assert.deepEqual(expected, result);
     })

@@ -47,7 +47,6 @@ describe("format string", function() {
 
         assert.deepEqual(expected, result);
     })
-    /*
     it("replaces", function() {
         const result = format.format.dotpath("be.fo/re {{ phrase }} a.ft/er", d);
         const expected = "be.fo/re Replacement String a.ft/er";
@@ -60,8 +59,15 @@ describe("format string", function() {
 
         assert.deepEqual(expected, result);
     })
-    it("replaces-with-path(upper)", function() {
+    // note that slashpaths continue to work
+    it("replaces-with-slashpath(upper)", function() {
         const result = format.format.dotpath("be.fo/re {{ something/a|upper) }} a.ft/er", d);
+        const expected = "be.fo/re SOME VALUE a.ft/er";
+
+        assert.deepEqual(expected, result);
+    })
+    it("replaces-with-dotpath(upper)", function() {
+        const result = format.format.dotpath("be.fo/re {{ something.a|upper) }} a.ft/er", d);
         const expected = "be.fo/re SOME VALUE a.ft/er";
 
         assert.deepEqual(expected, result);
@@ -102,5 +108,4 @@ describe("format string", function() {
 
         assert.deepEqual(expected, result);
     })
-    */
 })
