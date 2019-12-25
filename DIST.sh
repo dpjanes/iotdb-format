@@ -31,9 +31,12 @@ echo "=================="
 
     tar cf - \
         --exclude "node_modules" \
+        --exclude "xx*" \
+        --exclude "yy*" \
         README.md LICENSE \
         package.json \
-        index.js format.js \
+        index.js \
+        lib/*.js \
         |
     ( cd "${NPM_DST}" && tar xvf - && npm publish ) || exit 1
     git commit -m "new release" package.json || exit 1

@@ -22,7 +22,7 @@
 
 "use strict";
 
-const format = require('../format');
+const format = require("..")
 const assert = require("assert");
 
 const d = {
