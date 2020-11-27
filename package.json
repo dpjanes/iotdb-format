@@ -4,7 +4,7 @@
         "url": "https://github.com/dpjanes/iotdb-format/issues"
     }, 
     "dependencies": {
-        "iotdb-helpers": "~3.4.7"
+        "iotdb-helpers": "~3.5.1"
     }, 
     "description": "Simple String Formatting and Templating", 
     "homepage": "https://github.com/dpjanes/iotdb-helpers", 
